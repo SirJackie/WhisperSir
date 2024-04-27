@@ -16,12 +16,17 @@ def GetCPUNumber():
     return multiprocessing.cpu_count()
 
 
-def GetTempDir():
-    return tempfile.gettempdir()
-
-
 def EnableCMDUnicode():
     os.system("chcp 65001")
+
+
+def RunFFmpegConversion(input_file, output_file):
+    Hz = 16000  # 16 kHz, which Whisper requires.
+    command = "\".\\Executables\\ffmpeg\\ffmpeg.exe\" -i %s -ac 1 -ar %s %s -y" % \
+              (input_file, Hz, output_file)  # -y for "yes" Overwrite.
+    print(command)
+    # os.system(command)  # os.system() has some bug, don't use it.
+    subprocess.run(command)
 
 
 def RunWhisper(input_file, output_file, model_size="small", language="auto"):
@@ -50,15 +55,20 @@ if __name__ == "__main__":
 
     EnableCMDUnicode()
     print("CPU Cores:", GetCPUNumber())
-    print("Temp Dir:", GetTempDir())
 
     #
     # Real MEAT :)
     #
 
-    input_file = input("输入要转换文件的地址（必须是16kHz WAV格式的音频）：")
+    workingDir = WorkingDir(input("输入要转换文件的地址（音频视频皆可）："))
+    tempDir = TempDir()
 
-    workingDir = WorkingDir(input_file)
-    output_file = workingDir.At(workingDir.file_name, "")  # Whisper requires no extension.
+    RunFFmpegConversion(
+        input_file=workingDir.At(workingDir.file_name, workingDir.file_extension),
+        output_file=tempDir.At(workingDir.file_name, ".wav")
+    )
 
-    RunWhisper(input_file, output_file)
+    RunWhisper(
+        input_file=tempDir.At(workingDir.file_name, ".wav"),
+        output_file=workingDir.At(workingDir.file_name, "")
+    )

@@ -1,4 +1,5 @@
 import os
+import tempfile
 
 
 def DeQuoteIze(path):
@@ -20,6 +21,16 @@ class WorkingDir:
         original_file_path = DeQuoteIze(original_file_path)
         self.dir_name, file_full_name = os.path.split(original_file_path)
         self.file_name, self.file_extension = os.path.splitext(file_full_name)
+
+    def At(self, file, extension):
+        return QuoteIze(
+            os.path.join(self.dir_name, file + extension)
+        )
+
+
+class TempDir:
+    def __init__(self):
+        self.dir_name = DeQuoteIze(tempfile.gettempdir())
 
     def At(self, file, extension):
         return QuoteIze(
