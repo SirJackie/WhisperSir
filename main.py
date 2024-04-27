@@ -1,6 +1,8 @@
 import os
 import multiprocessing
 import subprocess
+import tempfile
+from PathHelper import *
 
 model_files = {
     "tiny": ".\\Models\\whisper-s1-tiny-mem-390MB.bin",
@@ -12,6 +14,10 @@ model_files = {
 
 def GetCPUNumber():
     return multiprocessing.cpu_count()
+
+
+def GetTempDir():
+    return tempfile.gettempdir()
 
 
 def EnableCMDUnicode():
@@ -37,18 +43,22 @@ def RunWhisper(input_file, output_file, model_size="small", language="auto"):
 
 
 if __name__ == "__main__":
+
+    #
+    # Info Log
+    #
+
     EnableCMDUnicode()
     print("CPU Cores:", GetCPUNumber())
+    print("Temp Dir:", GetTempDir())
+
+    #
+    # Real MEAT :)
+    #
 
     input_file = input("输入要转换文件的地址（必须是16kHz WAV格式的音频）：")
 
-    input_file_no_quote = None
-    if input_file.startswith("\""):
-        input_file_no_quote = input_file[1:-1]
-    else:
-        input_file_no_quote = input_file
-
-    dir_name, file_name = os.path.split(input_file_no_quote)
-    output_file = "\"" + os.path.join(dir_name, file_name[:-4]) + "\""  # Whisper requires no extension.
+    workingDir = WorkingDir(input_file)
+    output_file = workingDir.At(workingDir.file_name, "")  # Whisper requires no extension.
 
     RunWhisper(input_file, output_file)
