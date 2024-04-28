@@ -2,6 +2,7 @@ import os
 import multiprocessing
 import subprocess
 import tempfile
+import zhconv
 from PathHelper import *
 
 model_files = {
@@ -18,6 +19,7 @@ def GetCPUNumber():
 
 def EnableCMDUnicode():
     os.system("chcp 65001")
+    os.system("cls")
 
 
 def RunFFmpegConversion(input_file, output_file):
@@ -47,6 +49,21 @@ def RunWhisper(input_file, output_file, model_size="small", language="auto"):
     subprocess.run(command)
 
 
+def RunSimplifiedChineseConversion(input_file, output_file):
+    input_file = DeQuoteIze(input_file)
+    output_file = DeQuoteIze(output_file)
+
+    with open(input_file, 'r', encoding='utf-8') as f:
+        content = f.read()
+
+    simplified_content = zhconv.convert(content, 'zh-cn')
+    print("---------- Convert to Simplified Chinese ----------")
+    print(simplified_content)
+
+    with open(output_file, 'w', encoding='utf-8') as f:
+        f.write(simplified_content)
+
+
 if __name__ == "__main__":
 
     #
@@ -54,13 +71,15 @@ if __name__ == "__main__":
     #
 
     EnableCMDUnicode()
-    print("CPU Cores:", GetCPUNumber())
+    print("---------- WhisperSir ----------")
+    print("@@@ CPU Cores Detected:", GetCPUNumber())
+    print("@@@ Temp Folder:", TempDir().dir_name)
 
     #
     # Real MEAT :)
     #
 
-    workingDir = WorkingDir(input("输入要转换文件的地址（音频视频皆可）："))
+    workingDir = WorkingDir(input("输入要转换文件的地址（音频视频皆可，拖动到此窗口即可）："))
     tempDir = TempDir()
 
     RunFFmpegConversion(
@@ -72,3 +91,11 @@ if __name__ == "__main__":
         input_file=tempDir.At(workingDir.file_name, ".wav"),
         output_file=workingDir.At(workingDir.file_name, "")
     )
+
+    RunSimplifiedChineseConversion(
+        input_file=workingDir.At(workingDir.file_name, ".vtt"),
+        output_file=workingDir.At(workingDir.file_name, ".vtt")
+    )
+
+    print("---------- WhisperSir ----------")
+    print("@@@ Completed. Press any key to exit...")

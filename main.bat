@@ -1,1 +1,2 @@
-python main.py
+".\Venv\Scripts\python.exe" ".\main.py"
+pause
