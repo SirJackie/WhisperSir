@@ -79,23 +79,39 @@ if __name__ == "__main__":
     # Real MEAT :)
     #
 
-    workingDir = WorkingDir(input("输入要转换文件的地址（音频视频皆可，拖动到此窗口即可）："))
-    tempDir = TempDir()
+    input_string = input("输入要转换文件的地址（音频视频皆可，拖动到此窗口即可，可以一次拖动多个文件进来）：")
+    input_list = []
 
-    RunFFmpegConversion(
-        input_file=workingDir.At(workingDir.file_name, workingDir.file_extension),
-        output_file=tempDir.At(workingDir.file_name, ".wav")
-    )
+    if input_string[0] == "\"":
+        # Multiple "path" with quotes
+        input_string = input_string.strip("\"")
+        input_list = input_string.split('" "')
+        pass
+    else:
+        # Multiple path with no quotes
+        input_list = input_string.split(' ')
+        pass
 
-    RunWhisper(
-        input_file=tempDir.At(workingDir.file_name, ".wav"),
-        output_file=workingDir.At(workingDir.file_name, "")
-    )
+    for i in range(0, len(input_list)):
+        print("Processing: [", i+1, "/", len(input_list), "] File ...")
 
-    RunSimplifiedChineseConversion(
-        input_file=workingDir.At(workingDir.file_name, ".vtt"),
-        output_file=workingDir.At(workingDir.file_name, ".vtt")
-    )
+        workingDir = WorkingDir(input_list[i])
+        tempDir = TempDir()
+
+        RunFFmpegConversion(
+            input_file=workingDir.At(workingDir.file_name, workingDir.file_extension),
+            output_file=tempDir.At(workingDir.file_name, ".wav")
+        )
+
+        RunWhisper(
+            input_file=tempDir.At(workingDir.file_name, ".wav"),
+            output_file=workingDir.At(workingDir.file_name, "")
+        )
+
+        RunSimplifiedChineseConversion(
+            input_file=workingDir.At(workingDir.file_name, ".vtt"),
+            output_file=workingDir.At(workingDir.file_name, ".vtt")
+        )
 
     print("---------- WhisperSir ----------")
     print("@@@ Completed. Press any key to exit...")
