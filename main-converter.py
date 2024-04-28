@@ -80,7 +80,7 @@ if __name__ == "__main__":
     # Real MEAT :)
     #
 
-    input_string = input("输入要转换文件的地址（音频视频皆可，拖动到此窗口即可，可以一次拖动多个文件进来）：")
+    input_string = input("输入要转换的VTT文件的地址（会转换成SRT和TXT，拖动到此窗口即可，可以一次拖动多个文件进来）：")
     input_list = []
 
     if input_string[0] == "\"":
@@ -98,21 +98,6 @@ if __name__ == "__main__":
 
         workingDir = WorkingDir(input_list[i])
         tempDir = TempDir()
-
-        RunFFmpegConversion(
-            input_file=workingDir.At(workingDir.file_name, workingDir.file_extension),
-            output_file=tempDir.At(workingDir.file_name, ".wav")
-        )
-
-        RunWhisper(
-            input_file=tempDir.At(workingDir.file_name, ".wav"),
-            output_file=workingDir.At(workingDir.file_name, "")
-        )
-
-        RunSimplifiedChineseConversion(
-            input_file=workingDir.At(workingDir.file_name, ".vtt"),
-            output_file=workingDir.At(workingDir.file_name, ".vtt")
-        )
 
         VTT2SRT(
             vtt_file=workingDir.At(workingDir.file_name, ".vtt"),
