@@ -5,6 +5,7 @@ import tempfile
 import zhconv
 from PathHelper import *
 from FormatHelper import *
+import hashlib
 
 model_files = {
     "tiny": ".\\Models\\whisper-s1-tiny-mem-390MB.bin",
@@ -12,6 +13,12 @@ model_files = {
     "small": ".\\Models\\whisper-s3-small-mem-1.0GB.bin",
     "medium": ".\\Models\\whisper-s4-medium-mem-2.6GB.bin"
 }
+
+
+def GenerateHash(text):
+    hash_obj = hashlib.sha256()
+    hash_obj.update(text.encode('utf-8'))
+    return hash_obj.hexdigest()
 
 
 def GetCPUNumber():
@@ -99,14 +106,21 @@ if __name__ == "__main__":
         workingDir = WorkingDir(input_list[i])
         tempDir = TempDir()
 
+        hashCode = GenerateHash(workingDir.file_name)
+
         RunFFmpegConversion(
             input_file=workingDir.At(workingDir.file_name, workingDir.file_extension),
-            output_file=tempDir.At(workingDir.file_name, ".wav")
+            output_file=tempDir.At(hashCode, ".wav")
         )
 
         RunWhisper(
-            input_file=tempDir.At(workingDir.file_name, ".wav"),
-            output_file=workingDir.At(workingDir.file_name, "")
+            input_file=tempDir.At(hashCode, ".wav"),
+            output_file=workingDir.At(hashCode, "")
+        )
+
+        os.rename(
+            workingDir.At(hashCode, ".vtt"),
+            workingDir.At(workingDir.file_name, ".vtt")
         )
 
         RunSimplifiedChineseConversion(
