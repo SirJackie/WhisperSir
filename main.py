@@ -119,8 +119,8 @@ if __name__ == "__main__":
         )
 
         os.rename(
-            workingDir.At(hashCode, ".vtt"),
-            workingDir.At(workingDir.file_name, ".vtt")
+            DeQuoteIze(workingDir.At(hashCode, ".vtt")),
+            DeQuoteIze(workingDir.At(workingDir.file_name, ".vtt"))
         )
 
         RunSimplifiedChineseConversion(
