@@ -53,7 +53,8 @@ def VTT2TXT(vtt_file, txt_file):
         lines = block.split('\n')
         if len(lines) > 1:
             timestamp = lines[0]
-            text = '，'.join(lines[1:])
+            text = "，".join(lines[1:])
+            text = text.replace(" ", "，")
             subtitles.append(text)
 
     # Join subtitles into a single paragraph
