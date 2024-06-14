@@ -33,15 +33,18 @@ def EnableCMDUnicode():
 def RunFFmpegConversion(input_file, output_file):
     Hz = 16000  # 16 kHz, which Whisper requires.
     command = "\".\\Executables\\ffmpeg\\ffmpeg.exe\" -i %s -ac 1 -ar %s %s -y" % \
-              (input_file, Hz, output_file)  # -y for "yes" Overwrite.
-    print(command)
-    # os.system(command)  # os.system() has some bug, don't use it.
+              (
+                  QuoteIze(input_file),
+                  Hz,
+                  QuoteIze(output_file)
+              )  # -y for "yes" Overwrite.
+
     subprocess.run(command)
 
 
 def RunWhisper(input_file, output_file, model_size="small", language="auto"):
     # Get Model File's Path
-    model_file = "\"" + model_files[model_size] + "\""
+    model_file = model_files[model_size]
 
     # Create Maximum Amount of Threads to Utilize the Resource of PC.
     process_num = 1
@@ -51,16 +54,20 @@ def RunWhisper(input_file, output_file, model_size="small", language="auto"):
     print_progress = "true"
 
     command = "\".\\Executables\\whispercpp\\main.exe\" -m %s -f %s -l %s -t %s -p %s -ovtt true -of %s -pp %s" % \
-              (model_file, input_file, language, thread_num, process_num, output_file, print_progress)
-    print(command)
-    # os.system(command)  # os.system() has some bug, don't use it.
+              (
+                  QuoteIze(model_file),
+                  QuoteIze(input_file),
+                  language,
+                  thread_num,
+                  process_num,
+                  QuoteIze(output_file),
+                  print_progress
+              )
+
     subprocess.run(command)
 
 
 def RunSimplifiedChineseConversion(input_file, output_file):
-    input_file = DeQuoteIze(input_file)
-    output_file = DeQuoteIze(output_file)
-
     with open(input_file, 'r', encoding='utf-8') as f:
         content = f.read()
 
@@ -119,8 +126,8 @@ if __name__ == "__main__":
         )
 
         os.rename(
-            DeQuoteIze(workingDir.At(hashCode, ".vtt")),
-            DeQuoteIze(workingDir.At(workingDir.file_name, ".vtt"))
+            workingDir.At(hashCode, ".vtt"),
+            workingDir.At(workingDir.file_name, ".vtt")
         )
 
         RunSimplifiedChineseConversion(

@@ -2,9 +2,6 @@ from PathHelper import *
 
 
 def VTT2SRT(vtt_file, srt_file):
-    vtt_file = DeQuoteIze(vtt_file)
-    srt_file = DeQuoteIze(srt_file)
-
     with open(vtt_file, 'r', encoding='utf-8') as vtt_file:
         vtt_content = vtt_file.read()
 
@@ -22,9 +19,6 @@ def VTT2SRT(vtt_file, srt_file):
 
 
 def SRT2VTT(srt_file, vtt_file):
-    srt_file = DeQuoteIze(srt_file)
-    vtt_file = DeQuoteIze(vtt_file)
-
     with open(srt_file, 'r', encoding='utf-8') as srt_file:
         srt_content = srt_file.read()
 
@@ -44,9 +38,6 @@ def SRT2VTT(srt_file, vtt_file):
 
 
 def VTT2TXT(vtt_file, txt_file):
-    vtt_file = DeQuoteIze(vtt_file)
-    txt_file = DeQuoteIze(txt_file)
-
     with open(vtt_file, 'r', encoding='utf-8') as vtt_file:
         vtt_content = vtt_file.read()
 
