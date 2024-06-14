@@ -31,3 +31,18 @@ class TempDir:
 
     def At(self, file, extension):
         return os.path.join(self.dir_name, file + extension)
+
+
+def DropFiles():
+    input_string = input("拖动文件到此窗口即可，可以一次拖动多个文件进来：")
+    input_list = []
+
+    if input_string[0] == "\"":
+        # Multiple "path" with quotes
+        input_string = input_string.strip("\"")
+        input_list = input_string.split('" "')
+    else:
+        # Multiple path with no quotes
+        input_list = input_string.split(' ')
+
+    return input_list

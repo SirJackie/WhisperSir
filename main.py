@@ -1,35 +1,19 @@
 from APIHelper import *
+import os
 
-if __name__ == "__main__":
 
+def Mode1():
     #
-    # Info Log
-    #
-
-    EnableCMDUnicode()
-    print("---------- WhisperSir ----------")
-    print("@@@ CPU Cores Detected:", GetCPUNumber())
-    print("@@@ Temp Folder:", TempDir().dir_name)
-
-    #
-    # Real MEAT :)
+    # Recognition: MP4 => VTT
     #
 
-    input_string = input("输入要转换文件的地址（音频视频皆可，拖动到此窗口即可，可以一次拖动多个文件进来）：")
-    input_list = []
+    os.system("cls")
+    print("已选择模式：[1] 语音识别 (MP4 => VTT)")
 
-    if input_string[0] == "\"":
-        # Multiple "path" with quotes
-        input_string = input_string.strip("\"")
-        input_list = input_string.split('" "')
-        pass
-    else:
-        # Multiple path with no quotes
-        input_list = input_string.split(' ')
-        pass
+    input_list = DropFiles()
 
     for i in range(0, len(input_list)):
-        print("Processing: [", i+1, "/", len(input_list), "] File ...")
+        print("Processing: [", i + 1, "/", len(input_list), "] File ...")
 
         workingDir = WorkingDir(input_list[i])
         tempDir = TempDir()
@@ -56,5 +40,71 @@ if __name__ == "__main__":
             output_file=workingDir.At(workingDir.file_name, ".vtt")
         )
 
+
+def Mode2():
+    #
+    # Extraction: VTT => TXT
+    #
+
+    os.system("cls")
+    print("已选择模式：[2] 提取文字稿 (VTT => TXT)")
+
+    input_list = DropFiles()
+
+    for i in range(0, len(input_list)):
+        print("Processing: [", i + 1, "/", len(input_list), "] File ...")
+
+        workingDir = WorkingDir(input_list[i])
+
+        VTT2TXT(
+            vtt_file=workingDir.At(workingDir.file_name, ".vtt"),
+            txt_file=workingDir.At(workingDir.file_name, ".txt")
+        )
+
+
+def Mode3():
+    #
+    # Conversion: VTT => SRT
+    #
+
+    os.system("cls")
+    print("已选择模式：[3] 字幕格式转换 (VTT => SRT)")
+
+    input_list = DropFiles()
+
+    for i in range(0, len(input_list)):
+        print("Processing: [", i + 1, "/", len(input_list), "] File ...")
+
+        workingDir = WorkingDir(input_list[i])
+
+        VTT2SRT(
+            vtt_file=workingDir.At(workingDir.file_name, ".vtt"),
+            srt_file=workingDir.At(workingDir.file_name, ".srt")
+        )
+
+
+if __name__ == "__main__":
+
+    # Starter
+    EnableCMDUnicode()
+    print("---------- WhisperSir ----------")
+    print("@@@ CPU Cores Detected:", GetCPUNumber())
+    print("@@@ Temp Folder:", TempDir().dir_name)
+
+    # Mode Selection
+    mode = int(
+        input("[1] 语音识别 (MP4 => VTT)\n"
+              "[2] 提取文字稿 (VTT => TXT)\n"
+              "[3] 字幕格式转换 (VTT => SRT)\n"
+              "输入模式，并按回车：")
+    )
+    if mode == 1:
+        Mode1()
+    elif mode == 2:
+        Mode2()
+    elif mode == 3:
+        Mode3()
+
+    # Ender
     print("---------- WhisperSir ----------")
     print("@@@ Completed. Press any key to exit...")
