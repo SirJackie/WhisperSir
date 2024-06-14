@@ -135,15 +135,5 @@ if __name__ == "__main__":
             output_file=workingDir.At(workingDir.file_name, ".vtt")
         )
 
-        VTT2SRT(
-            vtt_file=workingDir.At(workingDir.file_name, ".vtt"),
-            srt_file=workingDir.At(workingDir.file_name, ".srt")
-        )
-
-        VTT2TXT(
-            vtt_file=workingDir.At(workingDir.file_name, ".vtt"),
-            txt_file=workingDir.At(workingDir.file_name, ".txt")
-        )
-
     print("---------- WhisperSir ----------")
     print("@@@ Completed. Press any key to exit...")
