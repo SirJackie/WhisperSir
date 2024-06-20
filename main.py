@@ -87,7 +87,15 @@ if __name__ == "__main__":
 
     # Starter
     EnableCMDUnicode()
+
+    # Greeting
     print("---------- WhisperSir ----------")
+    print("WhisperSir by SirJackie")
+    print("一款好用简单的语音识别工具，基于Whisper开发。")
+    print("GitHub: https://github.com/SirJackie")
+    print("--------------------------------")
+
+    # Hardware Detection
     print("@@@ CPU Cores Detected:", GetCPUNumber())
     print("@@@ Temp Folder:", TempDir().dir_name)
 
