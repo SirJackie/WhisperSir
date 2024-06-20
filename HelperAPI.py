@@ -3,8 +3,8 @@ import multiprocessing
 import subprocess
 import tempfile
 import zhconv
-from PathHelper import *
-from FormatHelper import *
+from HelperPath import *
+from HelperFormat import *
 import hashlib
 
 model_files = {

@@ -1,4 +1,4 @@
-from PathHelper import *
+from HelperPath import *
 
 
 def VTT2SRT(vtt_file, srt_file):
