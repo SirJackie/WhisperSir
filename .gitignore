@@ -1,6 +1,7 @@
 /.idea/
 **/__pycache__/
+/Venv/
+/wheels/
+
 /Executables/
 /Models/
-/Venv/
-/Wheels/
